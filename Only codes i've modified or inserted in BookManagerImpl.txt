@@ -1,0 +1,117 @@
+public void registerUsers(String fname, String lname, String address, String email, String username, String password) throws RemoteException {
+            
+		PreparedStatement stmt1 = null;
+		Connection con = null;
+		try{              
+                    Class.forName("com.mysql.cj.jdbc.Driver");  
+                    con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");  
+    		
+                    con.setAutoCommit(false);
+		    
+		    String registerUsers = "insert into registration(firstName, lastName, address, email, username, password) values(?, ?, ?, ?, ?, ?)";
+		    stmt1 = con.prepareStatement(registerUsers);
+
+		    stmt1.setString(1, fname); 
+		    stmt1.setString(2, lname);
+		    stmt1.setString(3, address);
+		    stmt1.setString(4, email);
+                    stmt1.setString(5, username);
+                    stmt1.setString(6, password);
+		   
+		    stmt1.execute();		   
+		    con.commit();
+		    
+                } catch (ClassNotFoundException | SQLException e) {
+                    try {
+                        con.rollback();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                    e.printStackTrace();
+                }
+	}
+        
+        public void displayLoginUsers(String username, String password) {
+                PreparedStatement stmt1 = null;
+		Connection con = null;
+                ResultSet rs;
+                try {
+                    Class.forName("com.mysql.cj.jdbc.Driver");  
+                    con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");
+                    
+                    con.setAutoCommit(false);
+                    
+                    String loginUsers = "SELECT * FROM registration where username=? and password=?";
+                    stmt1 = con.prepareStatement(loginUsers);
+                    
+                    stmt1.setString(1, username);
+                    stmt1.setString(2, password);
+                    
+                    rs = stmt1.executeQuery();
+                    con.commit();                      
+               
+                    } catch (ClassNotFoundException | SQLException e) {
+                        try {
+                            con.rollback();
+                        } catch (SQLException e1) {
+                        e1.printStackTrace();
+                        }
+                        e.printStackTrace();
+                    }
+        }
+       
+        
+        public void updateLoanDuration(int duration, int userId) throws RemoteException {
+            
+		PreparedStatement stmt1 = null;	
+		Connection con = null;
+		try{
+                   
+                    Class.forName("com.mysql.cj.jdbc.Driver");  
+                    con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");  
+    		
+                    con.setAutoCommit(false);
+		    stmt1 = con.prepareStatement("UPDATE user SET loanDuration = ? WHERE userId = ?");
+	
+		    stmt1.setInt(1, duration);
+		    stmt1.setInt(2, userId);
+		
+		    stmt1.execute();
+		    con.commit();
+		    
+                } catch (ClassNotFoundException | SQLException e) {
+                    try {
+                        con.rollback();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                    e.printStackTrace();
+                }
+	}
+        
+        public void deleteUser(int userId) throws RemoteException {
+            
+		PreparedStatement stmt1 = null;	
+		Connection con = null;
+		try{
+                   
+                    Class.forName("com.mysql.cj.jdbc.Driver");  
+                    con = DriverManager.getConnection("jdbc:mysql://localhost/library_system","root","");  
+    		
+                    con.setAutoCommit(false);
+		    stmt1 = con.prepareStatement("DELETE from user WHERE userId = ?");
+	
+		    stmt1.setInt(1, userId);
+		
+		    stmt1.execute();
+		    con.commit();
+		    
+                } catch (ClassNotFoundException | SQLException e) {
+                    try {
+                        con.rollback();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                    e.printStackTrace();
+                }
+	}
